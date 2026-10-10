@@ -1,0 +1,4093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MediCare HMS — Hospital Management System</title>
+
+<style>
+:root{
+--bg:#f5f8f8;--surface:#fff;--surface2:#eef3f3;
+--text:#12211f;--muted:#5b6e6c;--border:#d9e3e2;
+--primary:#146c6c;--primary-dark:#0d4f4f;
+--light:#dceDEC;--accent:#d9a441;
+--danger:#c4453c;--success:#2e8b57;
+--radius:10px;--shadow:0 2px 10px rgba(15,60,58,.08)
+}
+*{box-sizing:border-box}
+body{
+margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,Helvetica,sans-serif
+}
+.hidden{display:none!important}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+
+.topbar{
+position:sticky;top:0;z-index:20;background:var(--surface);
+border-bottom:1px solid var(--border);padding:14px 20px;
+display:flex;justify-content:space-between
+}
+
+.brand{display:flex;align-items:center;gap:10px;font-weight:bold}
+
+.cross{
+width:28px;height:28px;border-radius:7px;background:var(--primary);
+position:relative
+}
+
+.cross:before,.cross:after{
+content:"";position:absolute;background:#fff;border-radius:2px
+}
+
+.cross:before{width:14px;height:4px;top:12px;left:7px}
+.cross:after{width:4px;height:14px;top:7px;left:12px}
+
+/* ================= LANDING PAGE IMAGE STYLES ================= */
+
+.hero{
+min-height:calc(100vh - 58px);
+display:flex;
+align-items:center;
+justify-content:center;
+padding:40px 20px;
+background:
+linear-gradient(rgba(245,248,248,.93),rgba(245,248,248,.97)),
+url("https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1800&q=85");
+background-size:cover;
+background-position:center;
+}
+
+.hero-inner{
+max-width:1100px;
+width:100%;
+text-align:center
+}
+
+.hero h1{
+font-size:2.5rem;
+margin-bottom:10px
+}
+
+.hero p{
+color:var(--muted);
+margin-bottom:35px
+}
+
+/* Landing hero image */
+
+.hero-image{
+width:100%;
+max-width:900px;
+height:260px;
+margin:0 auto 35px;
+border-radius:18px;
+overflow:hidden;
+position:relative;
+box-shadow:0 12px 35px rgba(15,60,58,.15);
+border:1px solid var(--border);
+}
+
+.hero-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block
+}
+
+.hero-image-overlay{
+position:absolute;
+inset:0;
+display:flex;
+align-items:flex-end;
+justify-content:flex-start;
+padding:25px;
+background:linear-gradient(
+to top,
+rgba(0,0,0,.58),
+rgba(0,0,0,.05)
+);
+color:white;
+text-align:left
+}
+
+.hero-image-overlay h2{
+margin:0;
+font-size:1.6rem
+}
+
+.hero-image-overlay p{
+margin:5px 0 0;
+color:#fff;
+font-size:.9rem
+}
+
+.module-cards{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+max-width:900px;
+margin:auto
+}
+
+.module-card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:0;
+text-align:left;
+box-shadow:var(--shadow);
+cursor:pointer;
+transition:.2s;
+overflow:hidden
+}
+
+.module-card:hover{
+transform:translateY(-5px);
+border-color:var(--primary);
+box-shadow:0 8px 25px rgba(15,60,58,.14)
+}
+
+/* Module card images */
+
+.module-card-image{
+height:170px;
+width:100%;
+overflow:hidden
+}
+
+.module-card-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+transition:transform .3s
+}
+
+.module-card:hover .module-card-image img{
+transform:scale(1.05)
+}
+
+.module-card-content{
+padding:25px 30px 30px
+}
+
+.icon{
+width:48px;
+height:48px;
+background:var(--light);
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:25px;
+margin-bottom:15px
+}
+
+.module-card h3{
+margin:0 0 8px
+}
+
+.module-card p{
+margin:0 0 12px;
+color:var(--muted)
+}
+
+.go{
+color:var(--primary);
+font-weight:bold;
+font-size:.85rem
+}
+
+/* ================= AUTH ================= */
+
+.auth-wrap{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+
+.auth-card{
+width:100%;
+max-width:420px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:30px;
+box-shadow:var(--shadow)
+}
+
+.auth-card h2{
+margin:0 0 5px
+}
+
+.sub{
+color:var(--muted);
+font-size:.9rem;
+margin-bottom:22px
+}
+
+.back-link{
+border:0;
+background:none;
+color:var(--muted);
+padding:0;
+margin-bottom:18px
+}
+
+.field{
+margin-bottom:15px
+}
+
+.field label{
+display:block;
+font-size:.82rem;
+color:var(--muted);
+margin-bottom:6px
+}
+
+.field input,
+.field select,
+.field textarea{
+width:100%;
+padding:11px;
+border:1px solid var(--border);
+border-radius:8px;
+background:var(--bg);
+color:var(--text)
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+outline:2px solid var(--primary)
+}
+
+.btn{
+padding:10px 18px;
+border-radius:8px;
+border:0;
+font-weight:bold;
+font-size:.9rem
+}
+
+.btn-primary{
+background:var(--primary);
+color:#fff
+}
+
+.btn-primary:hover{
+background:var(--primary-dark)
+}
+
+.btn-ghost{
+background:transparent;
+border:1px solid var(--border)
+}
+
+.btn-danger{
+background:var(--danger);
+color:white
+}
+
+.btn-sm{
+padding:6px 12px;
+font-size:.8rem
+}
+
+.switch-line{
+text-align:center;
+margin-top:16px;
+color:var(--muted);
+font-size:.85rem
+}
+
+.switch-line button{
+background:none;
+border:0;
+color:var(--primary);
+font-weight:bold
+}
+
+.msg{
+padding:10px;
+border-radius:7px;
+margin-bottom:15px;
+font-size:.85rem
+}
+
+.msg-error{
+background:#f9e1df;
+color:var(--danger)
+}
+
+.msg-success{
+background:#dff2e6;
+color:var(--success)
+}
+
+/* ================= APP ================= */
+
+.app-shell{
+display:flex;
+min-height:100vh
+}
+
+.sidebar{
+width:225px;
+background:var(--surface);
+border-right:1px solid var(--border);
+padding:18px 12px;
+display:flex;
+flex-direction:column;
+gap:4px;
+position:sticky;
+top:0;
+height:100vh
+}
+
+.sidebar-title{
+font-size:.72rem;
+text-transform:uppercase;
+color:var(--muted);
+padding:10px
+}
+
+.nav-btn{
+border:0;
+background:none;
+padding:11px 12px;
+text-align:left;
+border-radius:8px;
+color:var(--text);
+font-size:.9rem
+}
+
+.nav-btn:hover{
+background:var(--surface2)
+}
+
+.nav-btn.active{
+background:var(--light);
+color:var(--primary-dark);
+font-weight:bold
+}
+
+.main{
+flex:1;
+padding:28px;
+min-width:0
+}
+
+.main h1{
+margin:0 0 5px
+}
+
+.page-sub{
+color:var(--muted);
+margin-bottom:25px
+}
+
+.stat-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:15px;
+margin-bottom:25px
+}
+
+.stat-card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:18px
+}
+
+.stat-card .num{
+font-size:1.7rem;
+font-weight:bold
+}
+
+.stat-card .lbl{
+font-size:.82rem;
+color:var(--muted);
+margin-top:4px
+}
+
+.panel{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:20px;
+margin-bottom:22px
+}
+
+.panel-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:16px
+}
+
+.panel-head h2{
+margin:0;
+font-size:1.05rem
+}
+
+.table-wrap{
+overflow-x:auto
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:550px
+}
+
+th{
+text-align:left;
+color:var(--muted);
+font-size:.75rem;
+padding:9px;
+border-bottom:1px solid var(--border)
+}
+
+td{
+padding:11px 9px;
+border-bottom:1px solid var(--border)
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px
+}
+
+.doctor-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+gap:15px
+}
+
+.doctor-card{
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:16px
+}
+
+.doctor-card h3{
+margin:0 0 5px
+}
+
+.spec{
+color:var(--primary);
+font-weight:bold;
+font-size:.82rem
+}
+
+.days{
+color:var(--muted);
+font-size:.8rem;
+margin-top:5px
+}
+
+.empty-state{
+text-align:center;
+color:var(--muted);
+padding:30px
+}
+
+.badge{
+display:inline-block;
+padding:4px 10px;
+border-radius:15px;
+font-size:.75rem;
+font-weight:bold
+}
+
+.badge-pending{
+background:#f9edcf;
+color:#a77916
+}
+
+.badge-approved,
+.badge-paid{
+background:#dff2e6;
+color:var(--success)
+}
+
+.badge-cancelled{
+background:#f9e1df;
+color:var(--danger)
+}
+
+.badge-unpaid{
+background:#f9edcf;
+color:#a77916
+}
+
+.bill-summary{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:15px;
+margin-bottom:20px
+}
+
+.bill-card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:18px
+}
+
+.bill-card h3{
+margin:0 0 8px
+}
+
+.bill-amount{
+font-size:1.45rem;
+font-weight:bold;
+color:var(--primary)
+}
+
+.receipt-box{
+border:1px dashed var(--border);
+padding:18px;
+border-radius:10px;
+background:var(--surface2)
+}
+
+.receipt-row{
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid var(--border)
+}
+
+.receipt-row:last-child{
+border-bottom:0
+}
+
+.bill-total{
+font-size:1.15rem;
+font-weight:bold
+}
+
+.row-actions{
+display:flex;
+gap:6px;
+flex-wrap:wrap
+}
+
+@media(max-width:760px){
+
+.sidebar{
+position:fixed;
+bottom:0;
+top:auto;
+width:100%;
+height:auto;
+flex-direction:row;
+justify-content:space-around;
+z-index:30;
+border-top:1px solid var(--border);
+border-right:0
+}
+
+.sidebar-title{
+display:none
+}
+
+.nav-btn{
+font-size:.68rem;
+padding:7px 4px;
+flex:1;
+text-align:center
+}
+
+.main{
+padding:20px 15px 90px
+}
+
+.hero-image{
+height:210px
+}
+
+}
+
+@media(max-width:620px){
+
+.module-cards,
+.form-grid{
+grid-template-columns:1fr
+}
+
+.hero h1{
+font-size:1.9rem
+}
+
+.hero{
+padding:25px 15px
+}
+
+.hero-image{
+height:190px
+}
+
+.hero-image-overlay{
+padding:18px
+}
+
+.hero-image-overlay h2{
+font-size:1.25rem
+}
+
+.module-card-content{
+padding:20px
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     LANDING PAGE
+     ========================================================= -->
+
+<section id="screen-landing">
+
+<div class="topbar">
+
+<div class="brand">
+<span class="cross"></span>
+MediCare HMS
+</div>
+
+</div>
+
+<div class="hero">
+
+<div class="hero-inner">
+
+<!-- MAIN HOSPITAL IMAGE -->
+
+<div class="hero-image">
+
+<img
+src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1600&q=85"
+alt="Modern hospital">
+
+<div class="hero-image-overlay">
+
+<div>
+<h2>Modern Healthcare Management</h2>
+<p>Simple, secure and connected hospital services.</p>
+</div>
+
+</div>
+
+</div>
+
+<h1>One system, every part of the hospital</h1>
+
+<p>
+Patients can register, book appointments and manage bills.
+Administrators can manage doctors, patients, appointments and billing.
+</p>
+
+<div class="module-cards">
+
+<!-- PATIENT PORTAL -->
+
+<div class="module-card" onclick="go('user-login')">
+
+<div class="module-card-image">
+
+<img
+src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=900&q=85"
+alt="Patient healthcare">
+
+</div>
+
+<div class="module-card-content">
+
+<div class="icon">🧑‍⚕️</div>
+
+<h3>Patient Portal</h3>
+
+<p>
+Register, book appointments, view appointments and manage bills.
+</p>
+
+<div class="go">
+Continue as patient →
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ADMIN CONSOLE -->
+
+<div class="module-card" onclick="go('admin-login')">
+
+<div class="module-card-image">
+
+<img
+src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&q=85"
+alt="Medical administration">
+
+</div>
+
+<div class="module-card-content">
+
+<div class="icon">🗂️</div>
+
+<h3>Admin Console</h3>
+
+<p>
+Manage doctors, appointments, patients and hospital billing.
+</p>
+
+<div class="go">
+Continue as admin →
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     USER LOGIN
+     ========================================================= -->
+
+<section id="screen-user-login" class="hidden">
+
+<div class="auth-wrap">
+
+<div class="auth-card">
+
+<button class="back-link" onclick="go('landing')">
+← Back
+</button>
+
+<h2>Patient Sign In</h2>
+
+<p class="sub">
+Access your appointments and bills.
+</p>
+
+<div id="user-login-msg"></div>
+
+<div class="field">
+<label>Email</label>
+<input
+type="email"
+id="ul-email"
+placeholder="you@example.com">
+</div>
+
+<div class="field">
+<label>Password</label>
+<input
+type="password"
+id="ul-password"
+placeholder="••••••••">
+</div>
+
+<button
+class="btn btn-primary"
+style="width:100%"
+onclick="userLogin()">
+
+Sign In
+
+</button>
+
+<div class="switch-line">
+
+New here?
+
+<button onclick="go('user-register')">
+Create an account
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     USER REGISTER
+     ========================================================= -->
+
+<section id="screen-user-register" class="hidden">
+
+<div class="auth-wrap">
+
+<div class="auth-card">
+
+<button class="back-link" onclick="go('user-login')">
+← Back
+</button>
+
+<h2>Create Your Account</h2>
+
+<p class="sub">
+Register to use the patient portal.
+</p>
+
+<div id="user-register-msg"></div>
+
+<div class="field">
+<label>Full Name</label>
+<input
+type="text"
+id="ur-name"
+placeholder="Your name">
+</div>
+
+<div class="field">
+<label>Email</label>
+<input
+type="email"
+id="ur-email"
+placeholder="you@example.com">
+</div>
+
+<div class="field">
+<label>Phone</label>
+<input
+type="tel"
+id="ur-phone"
+placeholder="9876543210">
+</div>
+
+<div class="field">
+<label>Password</label>
+<input
+type="password"
+id="ur-password"
+placeholder="Create password">
+</div>
+
+<button
+class="btn btn-primary"
+style="width:100%"
+onclick="userRegister()">
+
+Create Account
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     ADMIN LOGIN
+     ========================================================= -->
+
+<section id="screen-admin-login" class="hidden">
+
+<div class="auth-wrap">
+
+<div class="auth-card">
+
+<button class="back-link" onclick="go('landing')">
+← Back
+</button>
+
+<h2>Admin Sign In</h2>
+
+<p class="sub">
+Username: <b>admin</b> |
+Password: <b>admin123</b>
+</p>
+
+<div id="admin-login-msg"></div>
+
+<div class="field">
+<label>Username</label>
+<input
+type="text"
+id="al-username"
+placeholder="admin">
+</div>
+
+<div class="field">
+<label>Password</label>
+<input
+type="password"
+id="al-password"
+placeholder="admin123">
+</div>
+
+<button
+class="btn btn-primary"
+style="width:100%"
+onclick="adminLogin()">
+
+Sign In
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     USER DASHBOARD
+     ========================================================= -->
+
+<section id="screen-user-app" class="hidden">
+
+<div class="app-shell">
+
+<nav class="sidebar">
+
+<div class="sidebar-title">
+Patient Portal
+</div>
+
+<button
+class="nav-btn active"
+data-page="u-overview"
+onclick="userNav('u-overview')">
+
+🏠 Overview
+
+</button>
+
+<button
+class="nav-btn"
+data-page="u-book"
+onclick="userNav('u-book')">
+
+📅 Book Appointment
+
+</button>
+
+<button
+class="nav-btn"
+data-page="u-appts"
+onclick="userNav('u-appts')">
+
+🗒️ My Appointments
+
+</button>
+
+<button
+class="nav-btn"
+data-page="u-bills"
+onclick="userNav('u-bills')">
+
+💳 My Bills
+
+</button>
+
+<button
+class="nav-btn"
+data-page="u-profile"
+onclick="userNav('u-profile')">
+
+👤 Profile
+
+</button>
+
+<button
+class="nav-btn"
+onclick="logout('user')">
+
+🚪 Sign Out
+
+</button>
+
+</nav>
+
+<main class="main">
+
+<!-- USER OVERVIEW -->
+
+<div id="u-overview">
+
+<h1>
+Welcome Back<span id="u-welcome-name"></span>
+</h1>
+
+<p class="page-sub">
+Here's a quick look at your care.
+</p>
+
+<div class="stat-grid">
+
+<div class="stat-card">
+<div class="num" id="u-stat-total">0</div>
+<div class="lbl">Total Appointments</div>
+</div>
+
+<div class="stat-card">
+<div class="num" id="u-stat-pending">0</div>
+<div class="lbl">Pending Approval</div>
+</div>
+
+<div class="stat-card">
+<div class="num" id="u-stat-approved">0</div>
+<div class="lbl">Approved</div>
+</div>
+
+<div class="stat-card">
+<div class="num" id="u-stat-bills">0</div>
+<div class="lbl">Total Bills</div>
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<h2>Upcoming Appointments</h2>
+
+<button
+class="btn btn-primary btn-sm"
+onclick="userNav('u-book')">
+
++ New Appointment
+
+</button>
+
+</div>
+
+<div id="u-overview-list"></div>
+
+</div>
+
+</div>
+
+
+<!-- BOOK -->
+
+<div id="u-book" class="hidden">
+
+<h1>Book an Appointment</h1>
+
+<p class="page-sub">
+Choose a doctor and preferred date.
+</p>
+
+<div class="panel">
+
+<div id="u-book-msg"></div>
+
+<div class="form-grid">
+
+<div class="field">
+
+<label>Doctor</label>
+
+<select id="ub-doctor"></select>
+
+</div>
+
+<div class="field">
+
+<label>Preferred Date</label>
+
+<input
+type="date"
+id="ub-date">
+
+</div>
+
+</div>
+
+<div class="field">
+
+<label>Reason for Visit</label>
+
+<textarea
+id="ub-reason"
+rows="3"
+placeholder="Describe your reason for visiting">
+</textarea>
+
+</div>
+
+<button
+class="btn btn-primary"
+onclick="bookAppointment()">
+
+Request Appointment
+
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>Our Doctors</h2>
+</div>
+
+<div
+class="doctor-grid"
+id="u-doctor-list">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- APPOINTMENTS -->
+
+<div id="u-appts" class="hidden">
+
+<h1>My Appointments</h1>
+
+<p class="page-sub">
+Track all your appointment requests.
+</p>
+
+<div class="panel">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Doctor</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="u-appt-table"></tbody>
+
+</table>
+
+</div>
+
+<div
+id="u-appt-empty"
+class="empty-state hidden">
+
+No appointments yet.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- USER BILLING -->
+
+<div id="u-bills" class="hidden">
+
+<h1>My Bills</h1>
+
+<p class="page-sub">
+View your hospital bills and payment status.
+</p>
+
+<div class="bill-summary">
+
+<div class="bill-card">
+
+<h3>Total Bills</h3>
+
+<div
+class="bill-amount"
+id="u-bill-count">
+
+0
+
+</div>
+
+</div>
+
+<div class="bill-card">
+
+<h3>Total Amount</h3>
+
+<div class="bill-amount">
+
+₹<span id="u-bill-total">0</span>
+
+</div>
+
+</div>
+
+<div class="bill-card">
+
+<h3>Pending Amount</h3>
+
+<div class="bill-amount">
+
+₹<span id="u-bill-pending">0</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+
+<h2>Billing History</h2>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Bill ID</th>
+<th>Doctor</th>
+<th>Date</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="u-bill-table"></tbody>
+
+</table>
+
+</div>
+
+<div
+id="u-bill-empty"
+class="empty-state hidden">
+
+No bills available yet.
+
+</div>
+
+</div>
+
+<div
+id="u-receipt"
+class="panel hidden">
+
+<div class="panel-head">
+<h2>Payment Receipt</h2>
+</div>
+
+<div id="u-receipt-content"></div>
+
+</div>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div id="u-profile" class="hidden">
+
+<h1>Profile</h1>
+
+<p class="page-sub">
+Manage your registered details.
+</p>
+
+<div
+class="panel"
+style="max-width:450px">
+
+<div class="field">
+
+<label>Full Name</label>
+
+<input
+type="text"
+id="up-name">
+
+</div>
+
+<div class="field">
+
+<label>Email</label>
+
+<input
+type="email"
+id="up-email"
+disabled>
+
+</div>
+
+<div class="field">
+
+<label>Phone</label>
+
+<input
+type="tel"
+id="up-phone">
+
+</div>
+
+<button
+class="btn btn-primary"
+onclick="saveProfile()">
+
+Save Changes
+
+</button>
+
+<div
+id="u-profile-msg"
+style="margin-top:12px">
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     ADMIN DASHBOARD
+     ========================================================= -->
+
+<section id="screen-admin-app" class="hidden">
+
+<div class="app-shell">
+
+<nav class="sidebar">
+
+<div class="sidebar-title">
+Admin Console
+</div>
+
+<button
+class="nav-btn active"
+data-page="a-overview"
+onclick="adminNav('a-overview')">
+
+🏠 Overview
+
+</button>
+
+<button
+class="nav-btn"
+data-page="a-doctors"
+onclick="adminNav('a-doctors')">
+
+🩺 Doctors
+
+</button>
+
+<button
+class="nav-btn"
+data-page="a-appts"
+onclick="adminNav('a-appts')">
+
+🗒️ Appointments
+
+</button>
+
+<button
+class="nav-btn"
+data-page="a-patients"
+onclick="adminNav('a-patients')">
+
+🧑‍🤝‍🧑 Patients
+
+</button>
+
+<button
+class="nav-btn"
+data-page="a-billing"
+onclick="adminNav('a-billing')">
+
+💳 Billing
+
+</button>
+
+<button
+class="nav-btn"
+onclick="logout('admin')">
+
+🚪 Sign Out
+
+</button>
+
+</nav>
+
+<main class="main">
+
+<!-- ADMIN OVERVIEW -->
+
+<div id="a-overview">
+
+<h1>Admin Overview</h1>
+
+<p class="page-sub">
+A snapshot of hospital activity.
+</p>
+
+<div class="stat-grid">
+
+<div class="stat-card">
+
+<div
+class="num"
+id="a-stat-doctors">
+0
+</div>
+
+<div class="lbl">
+Doctors
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div
+class="num"
+id="a-stat-patients">
+0
+</div>
+
+<div class="lbl">
+Registered Patients
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div
+class="num"
+id="a-stat-appts">
+0
+</div>
+
+<div class="lbl">
+Appointments
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div
+class="num"
+id="a-stat-pending">
+0
+</div>
+
+<div class="lbl">
+Awaiting Review
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div
+class="num"
+id="a-stat-bills">
+0
+</div>
+
+<div class="lbl">
+Total Bills
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>Latest Appointment Requests</h2>
+</div>
+
+<div id="a-overview-list"></div>
+
+</div>
+
+</div>
+
+
+<!-- DOCTORS -->
+
+<div id="a-doctors" class="hidden">
+
+<h1>Doctors</h1>
+
+<p class="page-sub">
+Add and manage doctors.
+</p>
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>Add a Doctor</h2>
+</div>
+
+<div id="a-doctor-msg"></div>
+
+<div class="form-grid">
+
+<div class="field">
+
+<label>Full Name</label>
+
+<input
+type="text"
+id="ad-name"
+placeholder="Dr. A. Kumar">
+
+</div>
+
+<div class="field">
+
+<label>Specialization</label>
+
+<input
+type="text"
+id="ad-spec"
+placeholder="Cardiology">
+
+</div>
+
+<div class="field">
+
+<label>Available Days</label>
+
+<input
+type="text"
+id="ad-days"
+placeholder="Mon, Wed, Fri">
+
+</div>
+
+<div class="field">
+
+<label>Contact</label>
+
+<input
+type="text"
+id="ad-contact"
+placeholder="Phone or extension">
+
+</div>
+
+</div>
+
+<button
+class="btn btn-primary"
+onclick="addDoctor()">
+
+Add Doctor
+
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>Current Doctors</h2>
+</div>
+
+<div
+class="doctor-grid"
+id="a-doctor-list">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ADMIN APPOINTMENTS -->
+
+<div id="a-appts" class="hidden">
+
+<h1>Appointments</h1>
+
+<p class="page-sub">
+Approve or cancel patient requests.
+</p>
+
+<div class="panel">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Patient</th>
+<th>Doctor</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="a-appt-table"></tbody>
+
+</table>
+
+</div>
+
+<div
+id="a-appt-empty"
+class="empty-state hidden">
+
+No appointment requests yet.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PATIENTS -->
+
+<div id="a-patients" class="hidden">
+
+<h1>Patients</h1>
+
+<p class="page-sub">
+Registered patients.
+</p>
+
+<div class="panel">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Appointments</th>
+</tr>
+
+</thead>
+
+<tbody id="a-patient-table"></tbody>
+
+</table>
+
+</div>
+
+<div
+id="a-patient-empty"
+class="empty-state hidden">
+
+No patients registered yet.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ADMIN BILLING -->
+
+<div id="a-billing" class="hidden">
+
+<h1>Billing Management</h1>
+
+<p class="page-sub">
+Create and manage patient bills.
+</p>
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>Create New Bill</h2>
+</div>
+
+<div id="a-bill-msg"></div>
+
+<div class="form-grid">
+
+<div class="field">
+
+<label>Patient / Appointment</label>
+
+<select id="ab-appointment"></select>
+
+</div>
+
+<div class="field">
+
+<label>Consultation Fee (₹)</label>
+
+<input
+type="number"
+id="ab-consultation"
+value="500"
+min="0">
+
+</div>
+
+<div class="field">
+
+<label>Medicine Charges (₹)</label>
+
+<input
+type="number"
+id="ab-medicine"
+value="0"
+min="0">
+
+</div>
+
+<div class="field">
+
+<label>Other Charges (₹)</label>
+
+<input
+type="number"
+id="ab-other"
+value="0"
+min="0">
+
+</div>
+
+<div class="field">
+
+<label>Discount (₹)</label>
+
+<input
+type="number"
+id="ab-discount"
+value="0"
+min="0">
+
+</div>
+
+</div>
+
+<div class="receipt-box">
+
+<div class="receipt-row">
+
+<span>Subtotal</span>
+
+<strong>
+₹<span id="ab-subtotal">500</span>
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Discount</span>
+
+<strong>
+₹<span id="ab-discount-show">0</span>
+</strong>
+
+</div>
+
+<div class="receipt-row bill-total">
+
+<span>Total</span>
+
+<strong>
+₹<span id="ab-total">500</span>
+</strong>
+
+</div>
+
+</div>
+
+<button
+class="btn btn-primary"
+style="margin-top:15px"
+onclick="createBill()">
+
+Create Bill
+
+</button>
+
+</div>
+
+<div class="panel">
+
+<div class="panel-head">
+<h2>All Bills</h2>
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Bill ID</th>
+<th>Patient</th>
+<th>Doctor</th>
+<th>Date</th>
+<th>Total</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="a-bill-table"></tbody>
+
+</table>
+
+</div>
+
+<div
+id="a-bill-empty"
+class="empty-state hidden">
+
+No bills created yet.
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
+function load(key,fallback){
+
+try{
+
+const value=localStorage.getItem(key);
+
+return value?JSON.parse(value):fallback;
+
+}catch(e){
+
+return fallback;
+
+}
+
+}
+
+function save(key,value){
+
+localStorage.setItem(
+key,
+JSON.stringify(value)
+);
+
+}
+
+function uid(){
+
+return Date.now().toString(36)+
+Math.random().toString(36).slice(2,7);
+
+}
+
+function escapeHtml(s){
+
+return String(s||'').replace(
+/[&<>"']/g,
+c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c])
+);
+
+}
+
+
+/* =========================================================
+   SEED
+   ========================================================= */
+
+function seed(){
+
+if(!localStorage.getItem('hms_seeded')){
+
+save('hms_doctors',[
+
+{
+id:uid(),
+name:'Dr. Anita Rao',
+spec:'Cardiology',
+days:'Mon, Wed, Fri',
+contact:'Ext. 201'
+},
+
+{
+id:uid(),
+name:'Dr. Rohan Mehta',
+spec:'Orthopedics',
+days:'Tue, Thu',
+contact:'Ext. 214'
+},
+
+{
+id:uid(),
+name:'Dr. Sara Khan',
+spec:'Pediatrics',
+days:'Mon-Fri',
+contact:'Ext. 108'
+}
+
+]);
+
+save('hms_patients',[]);
+save('hms_appointments',[]);
+save('hms_bills',[]);
+
+localStorage.setItem(
+'hms_seeded',
+'1'
+);
+
+}
+
+if(!localStorage.getItem('hms_bills')){
+
+save('hms_bills',[]);
+
+}
+
+}
+
+seed();
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function go(screen){
+
+document
+.querySelectorAll('body>section')
+.forEach(s=>
+s.classList.add('hidden')
+);
+
+document
+.getElementById('screen-'+screen)
+.classList.remove('hidden');
+
+window.scrollTo(0,0);
+
+}
+
+
+/* =========================================================
+   ADMIN AUTH
+   ========================================================= */
+
+const ADMIN_USER='Rohitha';
+const ADMIN_PASS='Rohitha123';
+
+function adminLogin(){
+
+const username=
+document
+.getElementById('al-username')
+.value
+.trim();
+
+const password=
+document
+.getElementById('al-password')
+.value;
+
+const msg=
+document.getElementById('admin-login-msg');
+
+if(
+username===ADMIN_USER &&
+password===ADMIN_PASS
+){
+
+sessionStorage.setItem(
+'hms_admin_session',
+'1'
+);
+
+msg.innerHTML='';
+
+go('admin-app');
+
+adminNav('a-overview');
+
+renderAdmin();
+
+}else{
+
+msg.innerHTML=
+'<div class="msg msg-error">Incorrect username or password.</div>';
+
+}
+
+}
+
+
+/* =========================================================
+   USER AUTH
+   ========================================================= */
+
+let currentUserEmail=null;
+
+function userRegister(){
+
+const name=
+document
+.getElementById('ur-name')
+.value
+.trim();
+
+const email=
+document
+.getElementById('ur-email')
+.value
+.trim()
+.toLowerCase();
+
+const phone=
+document
+.getElementById('ur-phone')
+.value
+.trim();
+
+const password=
+document
+.getElementById('ur-password')
+.value;
+
+const msg=
+document.getElementById('user-register-msg');
+
+if(!name||!email||!password){
+
+msg.innerHTML=
+'<div class="msg msg-error">Please fill all required fields.</div>';
+
+return;
+
+}
+
+const patients=
+load('hms_patients',[]);
+
+if(
+patients.some(
+p=>p.email===email
+)
+){
+
+msg.innerHTML=
+'<div class="msg msg-error">Account already exists.</div>';
+
+return;
+
+}
+
+patients.push({
+
+id:uid(),
+name,
+email,
+phone,
+password
+
+});
+
+save(
+'hms_patients',
+patients
+);
+
+msg.innerHTML=
+'<div class="msg msg-success">Account created successfully.</div>';
+
+setTimeout(
+()=>go('user-login'),
+700
+);
+
+}
+
+
+function userLogin(){
+
+const email=
+document
+.getElementById('ul-email')
+.value
+.trim()
+.toLowerCase();
+
+const password=
+document
+.getElementById('ul-password')
+.value;
+
+const msg=
+document
+.getElementById('user-login-msg');
+
+const patients=
+load('hms_patients',[]);
+
+const found=
+patients.find(
+p=>
+p.email===email &&
+p.password===password
+);
+
+if(!found){
+
+msg.innerHTML=
+'<div class="msg msg-error">Invalid email or password.</div>';
+
+return;
+
+}
+
+currentUserEmail=email;
+
+sessionStorage.setItem(
+'hms_user_session',
+email
+);
+
+go('user-app');
+
+userNav('u-overview');
+
+renderUser();
+
+}
+
+
+function logout(type){
+
+if(type==='admin'){
+
+sessionStorage.removeItem(
+'hms_admin_session'
+);
+
+go('landing');
+
+}else{
+
+sessionStorage.removeItem(
+'hms_user_session'
+);
+
+currentUserEmail=null;
+
+go('landing');
+
+}
+
+}
+
+
+/* =========================================================
+   USER NAVIGATION
+   ========================================================= */
+
+function userNav(page){
+
+document
+.querySelectorAll(
+'#screen-user-app .nav-btn[data-page]'
+)
+.forEach(b=>{
+
+b.classList.toggle(
+'active',
+b.dataset.page===page
+);
+
+});
+
+[
+'u-overview',
+'u-book',
+'u-appts',
+'u-bills',
+'u-profile'
+].forEach(id=>{
+
+document
+.getElementById(id)
+.classList.toggle(
+'hidden',
+id!==page
+);
+
+});
+
+renderUser();
+
+}
+
+
+/* =========================================================
+   ADMIN NAVIGATION
+   ========================================================= */
+
+function adminNav(page){
+
+document
+.querySelectorAll(
+'#screen-admin-app .nav-btn[data-page]'
+)
+.forEach(b=>{
+
+b.classList.toggle(
+'active',
+b.dataset.page===page
+);
+
+});
+
+[
+'a-overview',
+'a-doctors',
+'a-appts',
+'a-patients',
+'a-billing'
+].forEach(id=>{
+
+document
+.getElementById(id)
+.classList.toggle(
+'hidden',
+id!==page
+);
+
+});
+
+renderAdmin();
+
+}
+
+
+/* =========================================================
+   USER
+   ========================================================= */
+
+function getCurrentPatient(){
+
+const patients=
+load('hms_patients',[]);
+
+return patients.find(
+p=>p.email===currentUserEmail
+);
+
+}
+
+
+function renderUser(){
+
+if(!currentUserEmail)return;
+
+const patient=
+getCurrentPatient();
+
+if(!patient)return;
+
+const doctors=
+load('hms_doctors',[]);
+
+const appointments=
+load('hms_appointments',[])
+.filter(
+a=>a.patientEmail===currentUserEmail
+);
+
+const bills=
+load('hms_bills',[])
+.filter(
+b=>b.patientEmail===currentUserEmail
+);
+
+document
+.getElementById('u-welcome-name')
+.textContent=
+', '+patient.name.split(' ')[0];
+
+document
+.getElementById('u-stat-total')
+.textContent=
+appointments.length;
+
+document
+.getElementById('u-stat-pending')
+.textContent=
+appointments.filter(
+a=>a.status==='pending'
+).length;
+
+document
+.getElementById('u-stat-approved')
+.textContent=
+appointments.filter(
+a=>a.status==='approved'
+).length;
+
+document
+.getElementById('u-stat-bills')
+.textContent=
+bills.length;
+
+
+/* Upcoming */
+
+const upcoming=
+appointments
+.filter(
+a=>a.status!=='cancelled'
+)
+.sort(
+(a,b)=>a.date.localeCompare(b.date)
+)
+.slice(0,5);
+
+document
+.getElementById('u-overview-list')
+.innerHTML=
+upcoming.length
+?
+upcoming.map(a=>{
+
+const doctor=
+doctors.find(
+d=>d.id===a.doctorId
+);
+
+return `
+
+<div style="
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid var(--border)">
+
+<span>
+
+${doctor?
+escapeHtml(doctor.name):
+'Doctor removed'}
+
+— ${a.date}
+
+</span>
+
+${statusBadge(a.status)}
+
+</div>
+
+`;
+
+}).join('')
+
+:
+'<div class="empty-state">No upcoming appointments.</div>';
+
+
+/* Doctor select */
+
+const select=
+document.getElementById('ub-doctor');
+
+select.innerHTML=
+doctors.map(d=>
+`
+<option value="${d.id}">
+
+${escapeHtml(d.name)}
+—
+${escapeHtml(d.spec)}
+
+</option>
+`
+).join('')
+||
+'<option>No doctors available</option>';
+
+
+/* Doctor cards */
+
+document
+.getElementById('u-doctor-list')
+.innerHTML=
+doctors.map(d=>`
+
+<div class="doctor-card">
+
+<h3>
+${escapeHtml(d.name)}
+</h3>
+
+<div class="spec">
+${escapeHtml(d.spec)}
+</div>
+
+<div class="days">
+Available:
+${escapeHtml(d.days)}
+</div>
+
+</div>
+
+`).join('')
+||
+'<div class="empty-state">No doctors available.</div>';
+
+
+/* Appointment table */
+
+const table=
+document.getElementById('u-appt-table');
+
+table.innerHTML=
+appointments
+.slice()
+.sort(
+(a,b)=>b.createdAt-a.createdAt
+)
+.map(a=>{
+
+const doctor=
+doctors.find(
+d=>d.id===a.doctorId
+);
+
+return `
+
+<tr>
+
+<td>
+${doctor?
+escapeHtml(doctor.name):
+'Removed'}
+</td>
+
+<td>${a.date}</td>
+
+<td>
+${escapeHtml(a.reason)||'—'}
+</td>
+
+<td>
+${statusBadge(a.status)}
+</td>
+
+<td>
+
+${
+a.status==='pending'
+?
+`
+<button
+class="btn btn-ghost btn-sm"
+onclick="cancelUserAppt('${a.id}')">
+
+Cancel
+
+</button>
+`
+:
+''
+}
+
+</td>
+
+</tr>
+
+`;
+
+}).join('');
+
+document
+.getElementById('u-appt-empty')
+.classList.toggle(
+'hidden',
+appointments.length>0
+);
+
+
+/* Profile */
+
+document
+.getElementById('up-name')
+.value=patient.name;
+
+document
+.getElementById('up-email')
+.value=patient.email;
+
+document
+.getElementById('up-phone')
+.value=patient.phone||'';
+
+renderUserBills();
+
+}
+
+
+/* =========================================================
+   APPOINTMENTS
+   ========================================================= */
+
+function statusBadge(status){
+
+const cls=
+status==='approved'
+?
+'badge-approved'
+:
+status==='cancelled'
+?
+'badge-cancelled'
+:
+'badge-pending';
+
+return `
+
+<span class="badge ${cls}">
+
+${status.charAt(0).toUpperCase()+status.slice(1)}
+
+</span>
+
+`;
+
+}
+
+
+function bookAppointment(){
+
+const doctorId=
+document
+.getElementById('ub-doctor')
+.value;
+
+const date=
+document
+.getElementById('ub-date')
+.value;
+
+const reason=
+document
+.getElementById('ub-reason')
+.value
+.trim();
+
+const msg=
+document
+.getElementById('u-book-msg');
+
+if(!doctorId||!date){
+
+msg.innerHTML=
+'<div class="msg msg-error">Please choose doctor and date.</div>';
+
+return;
+
+}
+
+const appointments=
+load('hms_appointments',[]);
+
+appointments.push({
+
+id:uid(),
+
+patientEmail:
+currentUserEmail,
+
+doctorId,
+
+date,
+
+reason,
+
+status:'pending',
+
+createdAt:Date.now()
+
+});
+
+save(
+'hms_appointments',
+appointments
+);
+
+msg.innerHTML=
+'<div class="msg msg-success">Appointment requested successfully.</div>';
+
+document
+.getElementById('ub-date')
+.value='';
+
+document
+.getElementById('ub-reason')
+.value='';
+
+renderUser();
+
+}
+
+
+function cancelUserAppt(id){
+
+const appointments=
+load('hms_appointments',[]);
+
+const appointment=
+appointments.find(
+a=>a.id===id
+);
+
+if(appointment){
+
+appointment.status=
+'cancelled';
+
+save(
+'hms_appointments',
+appointments
+);
+
+renderUser();
+
+}
+
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+function saveProfile(){
+
+const patients=
+load('hms_patients',[]);
+
+const patient=
+patients.find(
+p=>p.email===currentUserEmail
+);
+
+if(!patient)return;
+
+patient.name=
+document
+.getElementById('up-name')
+.value
+.trim()
+||
+patient.name;
+
+patient.phone=
+document
+.getElementById('up-phone')
+.value
+.trim();
+
+save(
+'hms_patients',
+patients
+);
+
+document
+.getElementById('u-profile-msg')
+.innerHTML=
+'<div class="msg msg-success">Profile updated.</div>';
+
+renderUser();
+
+}
+
+
+/* =========================================================
+   ADMIN
+   ========================================================= */
+
+function renderAdmin(){
+
+const doctors=
+load('hms_doctors',[]);
+
+const patients=
+load('hms_patients',[]);
+
+const appointments=
+load('hms_appointments',[]);
+
+const bills=
+load('hms_bills',[]);
+
+document
+.getElementById('a-stat-doctors')
+.textContent=
+doctors.length;
+
+document
+.getElementById('a-stat-patients')
+.textContent=
+patients.length;
+
+document
+.getElementById('a-stat-appts')
+.textContent=
+appointments.length;
+
+document
+.getElementById('a-stat-pending')
+.textContent=
+appointments.filter(
+a=>a.status==='pending'
+).length;
+
+document
+.getElementById('a-stat-bills')
+.textContent=
+bills.length;
+
+
+/* Latest */
+
+const recent=
+appointments
+.slice()
+.sort(
+(a,b)=>b.createdAt-a.createdAt
+)
+.slice(0,5);
+
+document
+.getElementById('a-overview-list')
+.innerHTML=
+recent.length
+?
+recent.map(a=>{
+
+const doctor=
+doctors.find(
+d=>d.id===a.doctorId
+);
+
+const patient=
+patients.find(
+p=>p.email===a.patientEmail
+);
+
+return `
+
+<div style="
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid var(--border)">
+
+<span>
+
+${patient?
+escapeHtml(patient.name):
+escapeHtml(a.patientEmail)}
+
+→
+
+${doctor?
+escapeHtml(doctor.name):
+'Removed'}
+
+· ${a.date}
+
+</span>
+
+${statusBadge(a.status)}
+
+</div>
+
+`;
+
+}).join('')
+:
+'<div class="empty-state">No appointments yet.</div>';
+
+
+/* Doctors */
+
+document
+.getElementById('a-doctor-list')
+.innerHTML=
+doctors.map(d=>`
+
+<div class="doctor-card">
+
+<h3>
+${escapeHtml(d.name)}
+</h3>
+
+<div class="spec">
+${escapeHtml(d.spec)}
+</div>
+
+<div class="days">
+
+Available:
+${escapeHtml(d.days)}
+
+${d.contact?
+' · '+escapeHtml(d.contact):
+''}
+
+</div>
+
+<div style="margin-top:12px">
+
+<button
+class="btn btn-ghost btn-sm"
+onclick="removeDoctor('${d.id}')">
+
+Remove
+
+</button>
+
+</div>
+
+</div>
+
+`).join('')
+||
+'<div class="empty-state">No doctors yet.</div>';
+
+
+/* Appointment table */
+
+const appointmentTable=
+document.getElementById('a-appt-table');
+
+appointmentTable.innerHTML=
+appointments
+.slice()
+.sort(
+(a,b)=>b.createdAt-a.createdAt
+)
+.map(a=>{
+
+const doctor=
+doctors.find(
+d=>d.id===a.doctorId
+);
+
+const patient=
+patients.find(
+p=>p.email===a.patientEmail
+);
+
+const actions=
+a.status==='pending'
+?
+`
+
+<button
+class="btn btn-primary btn-sm"
+onclick="setApptStatus('${a.id}','approved')">
+
+Approve
+
+</button>
+
+<button
+class="btn btn-ghost btn-sm"
+onclick="setApptStatus('${a.id}','cancelled')">
+
+Cancel
+
+</button>
+
+`
+:
+`
+
+<button
+class="btn btn-ghost btn-sm"
+onclick="setApptStatus('${a.id}','pending')">
+
+Reset
+
+</button>
+
+`;
+
+return `
+
+<tr>
+
+<td>
+${patient?
+escapeHtml(patient.name):
+escapeHtml(a.patientEmail)}
+</td>
+
+<td>
+${doctor?
+escapeHtml(doctor.name):
+'Removed'}
+</td>
+
+<td>${a.date}</td>
+
+<td>
+${escapeHtml(a.reason)||'—'}
+</td>
+
+<td>
+${statusBadge(a.status)}
+</td>
+
+<td>
+
+<div class="row-actions">
+
+${actions}
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+}).join('');
+
+document
+.getElementById('a-appt-empty')
+.classList.toggle(
+'hidden',
+appointments.length>0
+);
+
+
+/* Patients */
+
+const patientTable=
+document.getElementById('a-patient-table');
+
+patientTable.innerHTML=
+patients.map(p=>{
+
+const count=
+appointments.filter(
+a=>a.patientEmail===p.email
+).length;
+
+return `
+
+<tr>
+
+<td>
+${escapeHtml(p.name)}
+</td>
+
+<td>
+${escapeHtml(p.email)}
+</td>
+
+<td>
+${escapeHtml(p.phone)||'—'}
+</td>
+
+<td>
+${count}
+</td>
+
+</tr>
+
+`;
+
+}).join('');
+
+document
+.getElementById('a-patient-empty')
+.classList.toggle(
+'hidden',
+patients.length>0
+);
+
+renderAdminBilling();
+
+}
+
+
+function addDoctor(){
+
+const name=
+document
+.getElementById('ad-name')
+.value
+.trim();
+
+const spec=
+document
+.getElementById('ad-spec')
+.value
+.trim();
+
+const days=
+document
+.getElementById('ad-days')
+.value
+.trim();
+
+const contact=
+document
+.getElementById('ad-contact')
+.value
+.trim();
+
+const msg=
+document
+.getElementById('a-doctor-msg');
+
+if(!name||!spec){
+
+msg.innerHTML=
+'<div class="msg msg-error">Name and specialization are required.</div>';
+
+return;
+
+}
+
+const doctors=
+load('hms_doctors',[]);
+
+doctors.push({
+
+id:uid(),
+name,
+spec,
+days:days||'—',
+contact
+
+});
+
+save(
+'hms_doctors',
+doctors
+);
+
+msg.innerHTML=
+'<div class="msg msg-success">Doctor added successfully.</div>';
+
+[
+'ad-name',
+'ad-spec',
+'ad-days',
+'ad-contact'
+].forEach(id=>{
+
+document
+.getElementById(id)
+.value='';
+
+});
+
+renderAdmin();
+
+}
+
+
+function removeDoctor(id){
+
+const doctors=
+load('hms_doctors',[]);
+
+save(
+'hms_doctors',
+doctors.filter(
+d=>d.id!==id
+)
+);
+
+renderAdmin();
+
+}
+
+
+function setApptStatus(id,status){
+
+const appointments=
+load('hms_appointments',[]);
+
+const appointment=
+appointments.find(
+a=>a.id===id
+);
+
+if(appointment){
+
+appointment.status=status;
+
+save(
+'hms_appointments',
+appointments
+);
+
+renderAdmin();
+
+}
+
+}
+
+
+/* =========================================================
+   BILLING
+   ========================================================= */
+
+function formatMoney(value){
+
+return Number(value||0)
+.toLocaleString('en-IN');
+
+}
+
+
+function billStatusBadge(status){
+
+return status==='paid'
+?
+'<span class="badge badge-paid">Paid</span>'
+:
+'<span class="badge badge-unpaid">Pending</span>';
+
+}
+
+
+function calculateBillTotal(){
+
+const consultation=
+Number(
+document.getElementById('ab-consultation').value
+)||0;
+
+const medicine=
+Number(
+document.getElementById('ab-medicine').value
+)||0;
+
+const other=
+Number(
+document.getElementById('ab-other').value
+)||0;
+
+const discount=
+Number(
+document.getElementById('ab-discount').value
+)||0;
+
+const subtotal=
+consultation+
+medicine+
+other;
+
+const total=
+Math.max(
+0,
+subtotal-discount
+);
+
+document
+.getElementById('ab-subtotal')
+.textContent=
+formatMoney(subtotal);
+
+document
+.getElementById('ab-discount-show')
+.textContent=
+formatMoney(discount);
+
+document
+.getElementById('ab-total')
+.textContent=
+formatMoney(total);
+
+return total;
+
+}
+
+
+function populateBillingAppointments(){
+
+const select=
+document.getElementById('ab-appointment');
+
+const appointments=
+load('hms_appointments',[]);
+
+const patients=
+load('hms_patients',[]);
+
+const doctors=
+load('hms_doctors',[]);
+
+const bills=
+load('hms_bills',[]);
+
+const eligible=
+appointments.filter(
+a=>
+a.status==='approved' &&
+!bills.some(
+b=>b.appointmentId===a.id
+)
+);
+
+select.innerHTML=
+eligible.map(a=>{
+
+const patient=
+patients.find(
+p=>p.email===a.patientEmail
+);
+
+const doctor=
+doctors.find(
+d=>d.id===a.doctorId
+);
+
+return `
+
+<option value="${a.id}">
+
+${patient?
+escapeHtml(patient.name):
+escapeHtml(a.patientEmail)}
+
+—
+
+${doctor?
+escapeHtml(doctor.name):
+'Doctor removed'}
+
+—
+
+${a.date}
+
+</option>
+
+`;
+
+}).join('')
+||
+'<option value="">No billable appointments</option>';
+
+}
+
+
+function createBill(){
+
+const appointmentId=
+document
+.getElementById('ab-appointment')
+.value;
+
+const msg=
+document.getElementById('a-bill-msg');
+
+if(!appointmentId){
+
+msg.innerHTML=
+'<div class="msg msg-error">Please select an approved appointment.</div>';
+
+return;
+
+}
+
+const appointments=
+load('hms_appointments',[]);
+
+const appointment=
+appointments.find(
+a=>a.id===appointmentId
+);
+
+if(!appointment)return;
+
+const bills=
+load('hms_bills',[]);
+
+if(
+bills.some(
+b=>b.appointmentId===appointmentId
+)
+){
+
+msg.innerHTML=
+'<div class="msg msg-error">Bill already exists.</div>';
+
+return;
+
+}
+
+const consultation=
+Number(
+document.getElementById('ab-consultation').value
+)||0;
+
+const medicine=
+Number(
+document.getElementById('ab-medicine').value
+)||0;
+
+const other=
+Number(
+document.getElementById('ab-other').value
+)||0;
+
+const discount=
+Number(
+document.getElementById('ab-discount').value
+)||0;
+
+const subtotal=
+consultation+
+medicine+
+other;
+
+const total=
+Math.max(
+0,
+subtotal-discount
+);
+
+bills.push({
+
+id:
+'BILL-'+
+Date.now().toString().slice(-6),
+
+appointmentId,
+
+patientEmail:
+appointment.patientEmail,
+
+doctorId:
+appointment.doctorId,
+
+date:
+appointment.date,
+
+consultation,
+
+medicine,
+
+other,
+
+discount,
+
+subtotal,
+
+total,
+
+status:'pending',
+
+createdAt:
+Date.now()
+
+});
+
+save(
+'hms_bills',
+bills
+);
+
+msg.innerHTML=
+'<div class="msg msg-success">Bill created successfully.</div>';
+
+document
+.getElementById('ab-consultation')
+.value=500;
+
+document
+.getElementById('ab-medicine')
+.value=0;
+
+document
+.getElementById('ab-other')
+.value=0;
+
+document
+.getElementById('ab-discount')
+.value=0;
+
+calculateBillTotal();
+
+renderAdmin();
+
+}
+
+
+function renderAdminBilling(){
+
+const bills=
+load('hms_bills',[]);
+
+const patients=
+load('hms_patients',[]);
+
+const doctors=
+load('hms_doctors',[]);
+
+populateBillingAppointments();
+
+const table=
+document.getElementById('a-bill-table');
+
+if(!table)return;
+
+table.innerHTML=
+bills
+.slice()
+.sort(
+(a,b)=>b.createdAt-a.createdAt
+)
+.map(b=>{
+
+const patient=
+patients.find(
+p=>p.email===b.patientEmail
+);
+
+const doctor=
+doctors.find(
+d=>d.id===b.doctorId
+);
+
+return `
+
+<tr>
+
+<td>${b.id}</td>
+
+<td>
+${patient?
+escapeHtml(patient.name):
+escapeHtml(b.patientEmail)}
+</td>
+
+<td>
+${doctor?
+escapeHtml(doctor.name):
+'Removed'}
+</td>
+
+<td>${b.date}</td>
+
+<td>
+₹${formatMoney(b.total)}
+</td>
+
+<td>
+${billStatusBadge(b.status)}
+</td>
+
+<td>
+
+${
+b.status==='pending'
+?
+`
+
+<button
+class="btn btn-primary btn-sm"
+onclick="markBillPaid('${b.id}')">
+
+Mark Paid
+
+</button>
+
+`
+:
+`
+
+<button
+class="btn btn-ghost btn-sm"
+onclick="markBillPending('${b.id}')">
+
+Mark Pending
+
+</button>
+
+`
+}
+
+</td>
+
+</tr>
+
+`;
+
+}).join('');
+
+document
+.getElementById('a-bill-empty')
+.classList.toggle(
+'hidden',
+bills.length>0
+);
+
+}
+
+
+function markBillPaid(id){
+
+const bills=
+load('hms_bills',[]);
+
+const bill=
+bills.find(
+b=>b.id===id
+);
+
+if(bill){
+
+bill.status='paid';
+
+bill.paidAt=
+Date.now();
+
+bill.paymentMethod='Admin';
+
+save(
+'hms_bills',
+bills
+);
+
+renderAdmin();
+
+}
+
+}
+
+
+function markBillPending(id){
+
+const bills=
+load('hms_bills',[]);
+
+const bill=
+bills.find(
+b=>b.id===id
+);
+
+if(bill){
+
+bill.status='pending';
+
+delete bill.paidAt;
+
+save(
+'hms_bills',
+bills
+);
+
+renderAdmin();
+
+}
+
+}
+
+
+/* =========================================================
+   PATIENT BILLING
+   ========================================================= */
+
+function renderUserBills(){
+
+const table=
+document.getElementById('u-bill-table');
+
+if(!table||!currentUserEmail)return;
+
+const bills=
+load('hms_bills',[])
+.filter(
+b=>b.patientEmail===currentUserEmail
+);
+
+const doctors=
+load('hms_doctors',[]);
+
+const total=
+bills.reduce(
+(sum,b)=>
+sum+
+Number(b.total||0),
+0
+);
+
+const pending=
+bills
+.filter(
+b=>b.status==='pending'
+)
+.reduce(
+(sum,b)=>
+sum+
+Number(b.total||0),
+0
+);
+
+document
+.getElementById('u-bill-count')
+.textContent=
+bills.length;
+
+document
+.getElementById('u-bill-total')
+.textContent=
+formatMoney(total);
+
+document
+.getElementById('u-bill-pending')
+.textContent=
+formatMoney(pending);
+
+table.innerHTML=
+bills
+.slice()
+.sort(
+(a,b)=>b.createdAt-a.createdAt
+)
+.map(b=>{
+
+const doctor=
+doctors.find(
+d=>d.id===b.doctorId
+);
+
+return `
+
+<tr>
+
+<td>${b.id}</td>
+
+<td>
+${doctor?
+escapeHtml(doctor.name):
+'Removed'}
+</td>
+
+<td>${b.date}</td>
+
+<td>
+₹${formatMoney(b.total)}
+</td>
+
+<td>
+${billStatusBadge(b.status)}
+</td>
+
+<td>
+
+${
+b.status==='pending'
+?
+`
+
+<button
+class="btn btn-primary btn-sm"
+onclick="payBill('${b.id}')">
+
+Pay Now
+
+</button>
+
+`
+:
+`
+
+<button
+class="btn btn-ghost btn-sm"
+onclick="showReceipt('${b.id}')">
+
+Receipt
+
+</button>
+
+`
+}
+
+</td>
+
+</tr>
+
+`;
+
+}).join('');
+
+document
+.getElementById('u-bill-empty')
+.classList.toggle(
+'hidden',
+bills.length>0
+);
+
+}
+
+
+function payBill(id){
+
+const bills=
+load('hms_bills',[]);
+
+const bill=
+bills.find(
+b=>b.id===id
+);
+
+if(!bill)return;
+
+const confirmPayment=
+confirm(
+'Demo Payment\n\n'+
+'Bill: '+bill.id+
+'\nAmount: ₹'+
+formatMoney(bill.total)+
+'\n\nClick OK to complete payment.'
+);
+
+if(confirmPayment){
+
+bill.status='paid';
+
+bill.paidAt=
+Date.now();
+
+bill.paymentMethod=
+'Online Demo Payment';
+
+save(
+'hms_bills',
+bills
+);
+
+alert(
+'Payment successful!'
+);
+
+renderUserBills();
+
+showReceipt(id);
+
+}
+
+}
+
+
+function showReceipt(id){
+
+const bills=
+load('hms_bills',[]);
+
+const bill=
+bills.find(
+b=>b.id===id
+);
+
+if(!bill)return;
+
+const doctors=
+load('hms_doctors',[]);
+
+const patients=
+load('hms_patients',[]);
+
+const patient=
+patients.find(
+p=>p.email===bill.patientEmail
+);
+
+const doctor=
+doctors.find(
+d=>d.id===bill.doctorId
+);
+
+const receipt=
+document.getElementById('u-receipt');
+
+const content=
+document.getElementById('u-receipt-content');
+
+content.innerHTML=`
+
+<div class="receipt-box">
+
+<h3>
+MediCare HMS — Payment Receipt
+</h3>
+
+<div class="receipt-row">
+
+<span>Bill ID</span>
+
+<strong>
+${bill.id}
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Patient</span>
+
+<strong>
+${patient?
+escapeHtml(patient.name):
+'Patient'}
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Doctor</span>
+
+<strong>
+${doctor?
+escapeHtml(doctor.name):
+'Removed'}
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Appointment Date</span>
+
+<strong>
+${bill.date}
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Consultation</span>
+
+<strong>
+₹${formatMoney(bill.consultation)}
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Medicine</span>
+
+<strong>
+₹${formatMoney(bill.medicine)}
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Other Charges</span>
+
+<strong>
+₹${formatMoney(bill.other)}
+</strong>
+
+</div>
+
+<div class="receipt-row">
+
+<span>Discount</span>
+
+<strong>
+₹${formatMoney(bill.discount)}
+</strong>
+
+</div>
+
+<div class="receipt-row bill-total">
+
+<span>Total</span>
+
+<strong>
+₹${formatMoney(bill.total)}
+</strong>
+
+</div>
+
+<div style="margin-top:12px">
+
+Status:
+${billStatusBadge(bill.status)}
+
+</div>
+
+</div>
+
+`;
+
+receipt.classList.remove('hidden');
+
+}
+
+
+/* =========================================================
+   BILL CALCULATION
+   ========================================================= */
+
+document.addEventListener(
+'input',
+function(e){
+
+if([
+'ab-consultation',
+'ab-medicine',
+'ab-other',
+'ab-discount'
+].includes(e.target.id)){
+
+calculateBillTotal();
+
+}
+
+});
+
+
+/* =========================================================
+   RESTORE SESSION
+   ========================================================= */
+
+(function init(){
+
+try{
+
+const adminSession=
+sessionStorage.getItem(
+'hms_admin_session'
+);
+
+const userSession=
+sessionStorage.getItem(
+'hms_user_session'
+);
+
+if(adminSession){
+
+go('admin-app');
+
+adminNav('a-overview');
+
+return;
+
+}
+
+if(userSession){
+
+currentUserEmail=
+userSession;
+
+go('user-app');
+
+userNav('u-overview');
+
+return;
+
+}
+
+}catch(e){}
+
+go('landing');
+
+})();
+
+</script>
+
+</body>
+</html>
